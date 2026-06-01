@@ -20,9 +20,9 @@ fi
 ZIPNAME="${DEVICE}-$(date '+%Y%m%d-%H%M').zip"
 
 export ARCH=arm64
-export KBUILD_BUILD_USER=aryan
-export KBUILD_BUILD_HOST=celeste
-export PATH="/home/celeste/aryan/linux-x86/clang-r510928/bin/:$PATH"
+export KBUILD_BUILD_USER=annihilator
+export KBUILD_BUILD_HOST=annihilator
+export PATH="/home/annihilator/toolchains/neutron-clang/bin:$PATH"
 
 if [[ $1 = "-c" || $1 = "--clean" ]]; then
 	rm -rf out
@@ -30,12 +30,20 @@ if [[ $1 = "-c" || $1 = "--clean" ]]; then
 fi
 
 echo -e "\nStarting compilation for $DEVICE...\n"
-make O=out ARCH=arm64 ${DEVICE}_defconfig
+PATH=/usr/bin:$PATH make O=out ARCH=arm64 ${DEVICE}_defconfig
+
+PATH=/usr/bin:$PATH scripts/kconfig/merge_config.sh -O out/ out/.config docker_fix.config
+
 make -j$(nproc) \
     O=out \
     ARCH=arm64 \
     LLVM=1 \
     LLVM_IAS=1 \
+    HOSTCC=clang \
+    HOSTCXX=clang++ \
+    HOSTLDFLAGS="-fuse-ld=lld" \
+    CC=clang \
+    CLANG_TRIPLE=aarch64-linux-gnu- \
     CROSS_COMPILE=aarch64-linux-gnu- \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
@@ -53,7 +61,7 @@ echo -e "\nKernel compiled successfully! Zipping up...\n"
 if [ -d "$AK3_DIR" ]; then
 	cp -r $AK3_DIR AnyKernel3
 else
-	if ! git clone -q https://github.com/basamaryan/AnyKernel3 -b master AnyKernel3; then
+	if ! git clone -q https://github.com/posilash/AnyKernel3 -b master AnyKernel3; then
 		echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 		exit 1
 	fi
@@ -72,10 +80,3 @@ cd ..
 rm -rf AnyKernel3
 echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
 echo "Zip: $ZIPNAME"
-
-if test -z "$(git rev-parse --show-cdup 2>/dev/null)" &&
-   head=$(git rev-parse --verify HEAD 2>/dev/null); then
-	HASH="$(echo $head | cut -c1-8)"
-fi
-
-telegram -f $ZIPNAME -M "Completed in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) ! Latest commit: $HASH"
