@@ -59,6 +59,8 @@ Information trackers.
 
 > 💡 To be fair, I just commented out the problematic parts lol.
 
+---
+
 ## ⚡ Building From Source
 ### Prerequisites
 1. Ensure your host system provides a valid cross-compilation environment.
@@ -79,6 +81,8 @@ cd xiaomi_sm6150_kernel
 ./build.sh
 ```
 *The script will prompt you to enter one of the allowed target device codenames (courbet).*
+
+---
 
 ## 📦 Flashing and Verification
 ### AnyKernel3 Package Output
@@ -101,6 +105,8 @@ curl -sSL https://raw.githubusercontent.com/moby/moby/master/contrib/check-confi
 ```
 *Most critical parameters under Namespaces, Cgroups, and Storage should now display a green 
 `Generally Necessary: enabled` status.*
+
+---
 
 # 🤝 Credits
 - [meloalfa159](https://github.com/meloalfa159) for the base SM6150 kernel source.
