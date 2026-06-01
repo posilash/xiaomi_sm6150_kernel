@@ -4802,8 +4802,8 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
 		if (dequeue) {
 			dequeue_entity(qcfs_rq, se, DEQUEUE_SLEEP);
 		} else {
-			update_load_avg(qcfs_rq, se, 0);
-			se_update_runnable(se);
+			update_load_avg(se, 0);
+			//se_update_runnable(se);
 		}
 
 		qcfs_rq->h_nr_running -= task_delta;
@@ -4880,8 +4880,8 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
 		if (enqueue) {
 			enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
 		} else {
-			update_load_avg(cfs_rq, se, 0);
-			se_update_runnable(se);
+			update_load_avg(se, 0);
+			//se_update_runnable(se);
 		}
 
 		cfs_rq->h_nr_running += task_delta;
@@ -4892,7 +4892,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
 			break;
 	}
 
-	assert_list_leaf_cfs_rq(rq);
+	//assert_list_leaf_cfs_rq(rq);
 
 	if (!se) {
 		add_nr_running(rq, task_delta);

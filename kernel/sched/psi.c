@@ -1158,8 +1158,7 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
 
 void psi_trigger_destroy(struct psi_trigger *t)
 {
-	struct psi_trigger *t = container_of(ref, struct psi_trigger, refcount);
-	struct psi_group *group = t->group;
+	struct psi_group *group;
 	struct task_struct *task_to_destroy = NULL;
 
 	/*
@@ -1189,7 +1188,7 @@ void psi_trigger_destroy(struct psi_trigger *t)
 		/* reset min update period for the remaining triggers */
 		list_for_each_entry(tmp, &group->triggers, node)
 			period = min(period, div_u64(tmp->win.size,
-					UPDATES_PER_WINDOW));
+						     UPDATES_PER_WINDOW));
 		group->poll_min_period = period;
 		/* Destroy poll_task when the last trigger is destroyed */
 		if (group->poll_states == 0) {
@@ -1209,6 +1208,7 @@ void psi_trigger_destroy(struct psi_trigger *t)
 	 * before destroying the trigger and optionally the poll_task
 	 */
 	synchronize_rcu();
+
 	/*
 	 * Destroy the kworker after releasing trigger_lock to prevent a
 	 * deadlock while waiting for psi_poll_work to acquire trigger_lock
