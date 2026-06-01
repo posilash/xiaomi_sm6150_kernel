@@ -6,6 +6,9 @@ kernel namespaces, cgroups, network virtualization drivers, and custom upstream 
 
 Android kernels typically strip out containerization subsystems to save memory and minimize attack surfaces. This project restores those features, addresses breaking code segments in the scheduler/PSI structures, and provides an automated environment to compile and package flashable kernel ZIPs.
 
+A compiled flashable zip is profided 
+[here](https://github.com/posilash/xiaomi_sm6150_kernel/blob/sedici/out/courbet-20260401-1656.zip)
+
 Inspired by [FreddieOliveira's Docker-Android Guide](https://gist.github.com/FreddieOliveira/efe850df7ff3951cb62d74bd770dce27).
 
 ---
